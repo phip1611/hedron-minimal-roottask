@@ -1,3 +1,27 @@
+/*
+MIT License
+
+Copyright (c) 2021 Philipp Schuster
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 # For reference look:
 # - https://github.com/rust-lang/reference/blob/cf3a28145e06a3294494b5ac2ac4beef9f2e52e0/src/inline-assembly.md
 # - https://phip1611.de/blog/direct-systemcalls-to-linux-from-rust-code-x86_64/
@@ -29,8 +53,6 @@ start:
       # align stack to 64 byte / 512 bits
       # --> otherwise vector instructions or usage of
       #     vector registers  may throw a General Protection Fault
-
-      # "movABS + OFFSET": OFFSET definetly required; works also with just "mov" instruction
       movabs  rax,      OFFSET _initial_stack_top
       sub     rax,      64
       # increase by 8 again: weird x86_64 stack thingy: rsp - 8 must be 64-byte aligned

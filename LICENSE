@@ -1,4 +1,3 @@
-/*
 MIT License
 
 Copyright (c) 2021 Philipp Schuster
@@ -20,20 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
-//! Important type definitions of Hedron.
-
-#![allow(unused)]
-
-use crate::hedron::capability::CapSel;
-
-pub mod capability;
-pub mod pd_ctrl;
-pub mod syscall;
-
-/// Maximum of 2^26 = 67108864 capability selectors for kernel objects.
-/// Note that this number can be higher for memory capabilities!
-pub const NUM_CAP_SEL: CapSel = 67108864;
-
-/// By convention this is the capability selector of the roottask itself.
-pub const ROOTTASK_CAPSEL: CapSel = 32;

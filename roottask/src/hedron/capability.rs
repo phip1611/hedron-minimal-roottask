@@ -1,3 +1,26 @@
+/*
+MIT License
+
+Copyright (c) 2021 Philipp Schuster
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 //! Relevant typings to access or request capabilities in/from the kernel.
 //!
 //! The most relevant items of this file are [`CapSel`] and the following specialisations
@@ -54,15 +77,15 @@ pub const MAX_CRD_BASE: u64 = 0x000f_ffff_ffff_ffff;
 pub enum CrdKind {
     /// Null capability. Default value of each index in the capability space
     /// for each PD in the kernel. Usually not needed in userspace.
-    CrdKindNull = 0,
+    Null = 0,
     /// Capability refers to memory, therefore a page or a range
     /// of memory pages in the (virtual) address space.
-    CrdKindMemory = 1,
+    Memory = 1,
     /// Capability refers to a x86 I/O port.
-    CrdKindPortIo = 2,
+    PortIo = 2,
     /// Capability refers to a kernel object. The context, i.e. what kernel
     /// object depends on, gets derived from the syscall.
-    CrdKindObject = 3,
+    Object = 3,
 }
 
 impl CrdKind {
@@ -318,7 +341,7 @@ where
 {
     fn default() -> Self {
         Self::new_generic(
-            CrdKind::CrdKindNull,
+            CrdKind::Null,
             0.into(),
             0_u8.into(),
             Permissions::default().val().into(),
@@ -352,7 +375,7 @@ impl CrdMem {
     /// Creates the CRD to request or alternate memory mappings (like permissions).
     pub fn new(memory_page_num: u64, order: u8, permissions: MemCapPermissions) -> Self {
         Self::new_generic(
-            CrdKind::CrdKindMemory,
+            CrdKind::Memory,
             memory_page_num.into(),
             order.into(),
             permissions.val().into(),
@@ -378,7 +401,7 @@ impl CrdPortIO {
     /// Creates the CRD to request read/write access to one or more I/O ports.
     pub fn new(port: u16, order: u8) -> Self {
         Self::new_generic(
-            CrdKind::CrdKindPortIo,
+            CrdKind::PortIo,
             (port as u64).into(),
             order.into(),
             PortIOCapPermissions::READ_WRITE.val().into(),
@@ -406,7 +429,7 @@ impl CrdObjPD {
     /// to a PD, if it is used in the right context, i.e. correct syscall.
     pub fn new(pd_num: u64, order: u8, permissions: PDCapPermissions) -> Self {
         Self::new_generic(
-            CrdKind::CrdKindObject,
+            CrdKind::Object,
             pd_num.into(),
             order.into(),
             permissions.val().into(),
@@ -434,7 +457,7 @@ impl CrdObjSM {
     /// to a SM, if it is used in the right context, i.e. correct syscall.
     pub fn new(sm_num: u64, order: u8, permissions: SMCapPermissions) -> Self {
         Self::new_generic(
-            CrdKind::CrdKindObject,
+            CrdKind::Object,
             sm_num.into(),
             order.into(),
             permissions.val().into(),
@@ -462,7 +485,7 @@ impl CrdObjEC {
     /// to a EC, if it is used in the right context, i.e. correct syscall.
     pub fn new(ec_num: u64, order: u8, permissions: ECCapPermissions) -> Self {
         Self::new_generic(
-            CrdKind::CrdKindObject,
+            CrdKind::Object,
             ec_num.into(),
             order.into(),
             permissions.val().into(),
@@ -490,7 +513,7 @@ impl CrdObjSC {
     /// to a SC, if it is used in the right context, i.e. correct syscall.
     pub fn new(sc_num: u64, order: u8, permissions: SCCapPermissions) -> Self {
         Self::new_generic(
-            CrdKind::CrdKindObject,
+            CrdKind::Object,
             sc_num.into(),
             order.into(),
             permissions.val().into(),
@@ -523,7 +546,7 @@ impl CrdObjPT {
     ///             `pt_sel` must be order-aligned!
     pub fn new(pt_sel: CapSel, order: u8, permissions: PTCapPermissions) -> Self {
         Self::new_generic(
-            CrdKind::CrdKindObject,
+            CrdKind::Object,
             pt_sel.into(),
             order.into(),
             permissions.val().into(),
@@ -674,9 +697,9 @@ macro_rules! impl_permission_traits {
             }
         }
 
-        impl Into<u8> for $name {
-            fn into(self) -> u8 {
-                self.bits()
+        impl From<$name> for u8 {
+            fn from(val: $name) -> u8 {
+                val.bits()
             }
         }
 
