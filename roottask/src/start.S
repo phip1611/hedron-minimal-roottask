@@ -43,6 +43,10 @@ SOFTWARE.
 start:
       # INTEL SYNTAX on x86_64! Destination is left
 
+      # This code is partially Microkernel dependent. From the NOVA spec/Hedron documentation
+      # I know that the initial register state contains the HIP pointer in `rsp` and the
+      # UTCB pointer in `rsp - 0x1000`.
+
       # move HIP pointer to first function argument
       mov     rdi,    rsp
 
