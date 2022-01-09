@@ -50,7 +50,7 @@ start:
       # move HIP pointer to first function argument
       mov     rdi,    rsp
 
-      # UTCB is 1 page above HIP
+      # UTCB is 1 page below HIP
       lea     rsi,    [rsp - 0x1000]
 
       # SET UP STACK
