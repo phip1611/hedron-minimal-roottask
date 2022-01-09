@@ -42,7 +42,7 @@ const SERIAL_PORT: u16 = 0x3f8;
 /// Set's itself the permissions in the port I/O bitmap via Hedron syscall
 /// and outputs something to serial.
 #[no_mangle]
-fn rust_entry(hip_ptr: *const u64, utcb_ptr: *const u64) -> ! {
+fn rust_entry(hip_ptr: *const u8, utcb_ptr: *const u8) -> ! {
     // demonstration that vector instructions and vector registers work too
     // (no #GPF or so)
     let a = [1.1, 2.2, 3.3, 4.4];
