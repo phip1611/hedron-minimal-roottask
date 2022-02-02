@@ -36,7 +36,12 @@ use core::fmt::Write;
 use core::panic::PanicInfo;
 use uart_16550::SerialPort;
 
-/// De-facto standard address of the serial device on all x86(_64) platforms.
+/// Default standard I/O port of the serial device on (legacy) x86 platforms.
+/// On legacy BIOS systems the actual port can be found in the Bios Data Area (BDA).
+/// On modern systems the serial port is usually provided by a PCI card.
+/// See https://tldp.org/HOWTO/Serial-HOWTO-8.html
+///
+/// 0x3f8 definitely works in QEMU.
 const SERIAL_PORT: u16 = 0x3f8;
 
 /// Set's itself the permissions in the port I/O bitmap via Hedron syscall
