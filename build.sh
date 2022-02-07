@@ -5,9 +5,11 @@
 set -e
 set -x
 
+#########################################################################
 # nice "hack" which make the script work, even if not executed from "./"
 DIR=$(dirname "$(realpath "$0")")
 cd "$DIR" || exit
+#########################################################################
 
 # destination directory
 BUILD_DIR="./build"
@@ -16,6 +18,10 @@ function fn_main() {
   fn_build_hedron
   fn_build_rust
   fn_build_rust_strip
+
+
+  cp "hedron/build/src/hypervisor.elf32" "boot/hedron.elf"
+
 }
 
 function fn_prepare_build_dir() {
