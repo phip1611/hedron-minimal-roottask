@@ -52,11 +52,7 @@ main() {
         "2"
 
         "-cpu"
-        # make sure that this is never older than the architecture the build of the roottask or Hedron targets
-        # (i.e. QEMU may doesn't know SSE4 instruction but roottask uses them)
-        # Additional feature flags might be required on older Hardware despite the
-        # fact that they come with "Ivy Bridge".
-        "IvyBridge,+x2apic,+tsc-deadline,+avx,+f16c,"
+        "IvyBridge"
 
         # Multiboot1 kernel
         "-kernel"
