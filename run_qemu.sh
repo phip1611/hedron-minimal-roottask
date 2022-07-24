@@ -7,16 +7,7 @@
 
 set -e
 
-# make sure that this copy is up-to-date!
-HEDRON="hedron/build/src/hypervisor.elf32"
-COMPILER_TARGET="x86_64-unknown-none"
-
-# "debug" or "release"
-RELEASE=release
-
-# load stripped binary: debug symbols not relevant anyway but this
-# accelerates QEMU startup by a second or so
-ROOTTASK="roottask/target/${COMPILER_TARGET}/${RELEASE}/hmr_stripped"
+source .config.sh
 
 #########################################################################
 # nice "hack" which make the script work, even if not executed from "./"
@@ -31,7 +22,7 @@ cd "$DIR" || exit
 # main allows us to move all function definitions to the end of the file
 main() {
 
-  QEMU_ARGS=(
+    QEMU_ARGS=(
         # Disable default devices
         # QEMU by default enables a ton of devices which slow down boot.
         "-nodefaults"
@@ -73,10 +64,10 @@ main() {
         # Setup monitor
         "-monitor"
         "vc:1024x768"
-  )
+    )
 
-  echo "Executing: qemu-system-x86_64 " "${QEMU_ARGS[@]}"
-  qemu-system-x86_64 "${QEMU_ARGS[@]}"
+    echo "Executing: qemu-system-x86_64 " "${QEMU_ARGS[@]}"
+    qemu-system-x86_64 "${QEMU_ARGS[@]}"
 
 }
 
