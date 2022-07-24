@@ -72,7 +72,7 @@ pub const MAX_CRD_BASE: u64 = 0x000f_ffff_ffff_ffff;
 
 /// Defines the kind of capabilities inside the capability
 /// space of a PD inside the kernel. First two bits of [`Crd`].
-#[derive(Debug, Copy, Clone, IntoEnumIterator, PartialEq)]
+#[derive(Debug, Copy, Clone, IntoEnumIterator, PartialEq, Eq)]
 #[repr(u8)]
 pub enum CrdKind {
     /// Null capability. Default value of each index in the capability space

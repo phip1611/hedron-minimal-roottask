@@ -9,13 +9,14 @@ set -e
 
 # make sure that this copy is up-to-date!
 HEDRON="hedron/build/src/hypervisor.elf32"
+COMPILER_TARGET="x86_64-unknown-none"
 
 # "debug" or "release"
 RELEASE=release
 
 # load stripped binary: debug symbols not relevant anyway but this
 # accelerates QEMU startup by a second or so
-ROOTTASK="roottask/target/x86_64-unknown-hedron/${RELEASE}/hmr_stripped"
+ROOTTASK="roottask/target/${COMPILER_TARGET}/${RELEASE}/hmr_stripped"
 
 #########################################################################
 # nice "hack" which make the script work, even if not executed from "./"

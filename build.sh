@@ -11,6 +11,7 @@ cd "$DIR" || exit
 
 # destination directory
 BUILD_DIR="./build"
+COMPILER_TARGET="x86_64-unknown-none"
 
 function fn_main() {
   fn_build_hedron
@@ -44,13 +45,15 @@ function fn_build_rust() {
 }
 
 # Strip debug symbols; much smaller ELF file. Accelerates QEMU startup by a second or so.
+# The strip step is only relevant for QEMU < 6.2. In QEMU 6.2, the startup of large Multiboot2
+# modules is accelerated by an order of magnitude.
 function fn_build_rust_strip() {
   OLD_PWD=$(pwd)
   cd "./roottask" || exit
-  cp "target/x86_64-unknown-hedron/debug/hmr" "target/x86_64-unknown-hedron/debug/hmr_stripped"
-  strip "target/x86_64-unknown-hedron/debug/hmr_stripped"
-  cp "target/x86_64-unknown-hedron/release/hmr" "target/x86_64-unknown-hedron/release/hmr_stripped"
-  strip "target/x86_64-unknown-hedron/release/hmr_stripped"
+  cp "target/${COMPILER_TARGET}/debug/hmr" "target/${COMPILER_TARGET}/debug/hmr_stripped"
+  strip "target/${COMPILER_TARGET}/debug/hmr_stripped"
+  cp "target/${COMPILER_TARGET}/release/hmr" "target/${COMPILER_TARGET}/release/hmr_stripped"
+  strip "target/${COMPILER_TARGET}/release/hmr_stripped"
   cd "$OLD_PWD"
 }
 

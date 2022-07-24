@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2021 Philipp Schuster
+Copyright (c) 2022 Philipp Schuster
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 # For reference look:
-# - https://github.com/rust-lang/reference/blob/cf3a28145e06a3294494b5ac2ac4beef9f2e52e0/src/inline-assembly.md
+# - https://github.com/rust-lang/reference/blob/rust-1.63.0/src/inline-assembly.md
 # - https://phip1611.de/blog/direct-systemcalls-to-linux-from-rust-code-x86_64/
 
 # ensure that we only produce 64-bit x86_64 code.

@@ -24,6 +24,7 @@ SOFTWARE.
 
 #![no_std]
 #![no_main]
+#![feature(panic_info_message)]
 
 core::arch::global_asm!(include_str!("start.S"));
 
@@ -34,6 +35,7 @@ use crate::hedron::pd_ctrl::{pd_ctrl_delegate, DelegateFlags};
 use crate::hedron::ROOTTASK_CAPSEL;
 use core::fmt::Write;
 use core::panic::PanicInfo;
+use core::sync::atomic::{compiler_fence, Ordering};
 use uart_16550::SerialPort;
 
 /// Default standard I/O port of the serial device on (legacy) x86 platforms.
@@ -48,8 +50,8 @@ const SERIAL_PORT: u16 = 0x3f8;
 /// and outputs something to serial.
 #[no_mangle]
 fn rust_entry(hip_ptr: *const u8, utcb_ptr: *const u8) -> ! {
-    // demonstration that vector instructions and vector registers work too
-    // (no #GPF or so)
+    // demonstration that vector instructions and vector registers work
+    // => no #GPF or so due to stack misalignment
     let a = [1.1, 2.2, 3.3, 4.4];
     let b = [-1.55, 22.2, 63.3, -64.4];
     let mut c = [0.0; 4];
@@ -60,8 +62,7 @@ fn rust_entry(hip_ptr: *const u8, utcb_ptr: *const u8) -> ! {
     let mut serial = enable_serial_device();
     writeln!(
         serial,
-        "Hello World from Roottask: hip_ptr={:?}, utcb_ptr:{:?}",
-        hip_ptr, utcb_ptr
+        "Hello World from Roottask: hip_ptr={hip_ptr:?}, utcb_ptr:{utcb_ptr:?}",
     )
     .unwrap();
     writeln!(serial, "a[{:?}] * b[{:?}] = c[{:?}]", a, b, c).unwrap();
@@ -86,11 +87,19 @@ fn enable_serial_device() -> SerialPort {
     .unwrap();
 
     // initialize the driver of the serial device behind the I/O port
-    unsafe { uart_16550::SerialPort::new(SERIAL_PORT) }
+    unsafe { SerialPort::new(SERIAL_PORT) }
 }
 
 // required by the Rust compiler.
 #[panic_handler]
-fn panic_handler(_info: &PanicInfo) -> ! {
-    loop {}
+fn panic_handler(info: &PanicInfo) -> ! {
+    let mut serial = enable_serial_device();
+    let _ = writeln!(
+        serial,
+        "PANIC: {:?}",
+        info.message().unwrap_or(&format_args!("<unknown>"))
+    );
+    loop {
+        compiler_fence(Ordering::SeqCst)
+    }
 }

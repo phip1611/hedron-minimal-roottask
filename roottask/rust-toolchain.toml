@@ -3,7 +3,13 @@
 
 [toolchain]
 # see README.md why this version was chosen
-channel = "nightly-2022-01-03"
+channel = "nightly-2022-07-07"
 # see https://rust-lang.github.io/rustup/concepts/components.html
 # for value you can put here
-components = ["rustfmt", "rustc", "rust-src", "cargo", "rust-std", "rust-docs", "clippy" ]
+components = ["rustfmt", "rustc", "rust-src", "cargo", "rust-std", "rust-docs", "clippy"]
+
+# As this is a Tier 2 target, this will trigger Rustup to download pre-compiled versions of
+# libcore and liballoc. No more need for "build-std".
+targets = [
+    "x86_64-unknown-none"
+]

@@ -108,7 +108,7 @@ impl PdCtrlSubSyscall {
 
 /// Possible return values from the syscall.
 /// All except the 0 value are error codes.
-#[derive(Debug, Copy, Clone, PartialEq, IntoEnumIterator)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, IntoEnumIterator)]
 #[repr(u64)]
 pub enum SyscallStatus {
     /// The operation completed successfully
