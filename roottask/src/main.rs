@@ -28,28 +28,22 @@ SOFTWARE.
 
 core::arch::global_asm!(include_str!("start.S"));
 
+mod bda;
+mod debugcon;
 mod hedron;
+mod logger;
+mod serial;
 
 use crate::hedron::capability::CrdPortIO;
 use crate::hedron::pd_ctrl::{pd_ctrl_delegate, DelegateFlags};
 use crate::hedron::ROOTTASK_CAPSEL;
-use core::fmt::Write;
 use core::panic::PanicInfo;
 use core::sync::atomic::{compiler_fence, Ordering};
-use uart_16550::SerialPort;
 
-/// Default standard I/O port of the serial device on (legacy) x86 platforms.
-/// On legacy BIOS systems the actual port can be found in the Bios Data Area (BDA).
-/// On modern systems the serial port is usually provided by a PCI card.
-/// See https://tldp.org/HOWTO/Serial-HOWTO-8.html
-///
-/// 0x3f8 definitely works in QEMU.
-const SERIAL_PORT: u16 = 0x3f8;
-
-/// Set's itself the permissions in the port I/O bitmap via Hedron syscall
-/// and outputs something to serial.
+/// Minimal roottask that performs some calculations and prints to serial and QEMUs debugcon port.
 #[no_mangle]
 fn rust_entry(hip_ptr: *const u8, utcb_ptr: *const u8) -> ! {
+    logger::init(log::LevelFilter::max());
     // demonstration that vector instructions and vector registers work
     // => no #GPF or so due to stack misalignment
     let a = [1.1, 2.2, 3.3, 4.4];
@@ -59,43 +53,16 @@ fn rust_entry(hip_ptr: *const u8, utcb_ptr: *const u8) -> ! {
         c[i] = a[i] * b[i];
     }
     // -------------------------------------
-    let mut serial = enable_serial_device();
-    writeln!(
-        serial,
-        "Hello World from Roottask: hip_ptr={hip_ptr:?}, utcb_ptr:{utcb_ptr:?}",
-    )
-    .unwrap();
-    writeln!(serial, "a[{:?}] * b[{:?}] = c[{:?}]", a, b, c).unwrap();
+    log::info!("Hello World from Roottask: hip_ptr={hip_ptr:?}, utcb_ptr:{utcb_ptr:?}");
+    log::info!("a[{a:?}] * b[{b:?}] = c[{c:?}]");
 
     panic!("game over")
-}
-
-/// Performs a `PD_CTRL_DELEGATE`-syscall. Roottask maps itself the permissions
-/// for the serial ports. It needs ports 0x38f + the seven ports after that.
-///
-/// Returns the port object from [`uart_16550`].
-fn enable_serial_device() -> SerialPort {
-    pd_ctrl_delegate(
-        ROOTTASK_CAPSEL,
-        ROOTTASK_CAPSEL,
-        // order 3: means 2^3 == 8 => map 8 ports at once => optimization of NOVA/Hedron syscall interface
-        CrdPortIO::new(SERIAL_PORT, 3),
-        CrdPortIO::new(SERIAL_PORT, 3),
-        // most important boolean flag: "use hypervisor as src"
-        DelegateFlags::new(true, false, false, true, 0),
-    )
-    .unwrap();
-
-    // initialize the driver of the serial device behind the I/O port
-    unsafe { SerialPort::new(SERIAL_PORT) }
 }
 
 // required by the Rust compiler.
 #[panic_handler]
 fn panic_handler(info: &PanicInfo) -> ! {
-    let mut serial = enable_serial_device();
-    let _ = writeln!(
-        serial,
+    log::error!(
         "PANIC: {:?}",
         info.message().unwrap_or(&format_args!("<unknown>"))
     );

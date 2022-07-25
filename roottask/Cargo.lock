@@ -15,6 +15,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
+name = "cfg-if"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
 name = "enum-iterator"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -40,7 +46,18 @@ version = "0.1.0"
 dependencies = [
  "bitflags",
  "enum-iterator",
+ "log",
+ "runs_inside_qemu",
  "uart_16550",
+]
+
+[[package]]
+name = "log"
+version = "0.4.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "abb12e687cfb44aa40f41fc3978ef76448f9b6038cad6aef4259d3c095a2382e"
+dependencies = [
+ "cfg-if",
 ]
 
 [[package]]
@@ -59,6 +76,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3bcdf212e9776fbcb2d23ab029360416bb1706b1aea2d1a5ba002727cbcab804"
 dependencies = [
  "proc-macro2",
+]
+
+[[package]]
+name = "raw-cpuid"
+version = "10.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "738bc47119e3eeccc7e94c4a506901aea5e7b4944ecd0829cbebf4af04ceda12"
+dependencies = [
+ "bitflags",
+]
+
+[[package]]
+name = "runs_inside_qemu"
+version = "1.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61682a232ca6c4c4b66b014148992b823feccc69cb243257115f0664e894a4e3"
+dependencies = [
+ "log",
+ "raw-cpuid",
 ]
 
 [[package]]

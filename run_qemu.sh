@@ -61,6 +61,10 @@ main() {
         "-serial"
         "stdio"
 
+        # Enable the debugcon device on port 0xe9.
+        "-debugcon"
+        "file:debugcon.txt"
+
         # Setup monitor
         "-monitor"
         "vc:1024x768"
