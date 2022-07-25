@@ -47,3 +47,12 @@ out of scope.**
 The roottask will print information to the serial device (COM1 port) but not to the VGA framebuffer. Thus, you will
 only see output from Hedron on the screen so far. Currently, there is no nice mechanism to enable the roottask to
 print to a framebuffer.
+
+### What is Bender?
+[Bender](https://github.com/blitz/bender) is a Multiboot 1 chainloader intended to be loaded from GRUB or a similar
+multiboot-capable bootloader. It tries to find PCI serial controllers and updates the
+[BIOS Data Area](https://wiki.osdev.org/BDA#BIOS_Data_Area) to make them discoverable by legacy software.
+
+I use Bender in the `gen_bootimage.sh` script because it enables to get serial output from more real devices.
+For example, some don't have an internal COM1 port anymore respectively, do not provide a physical connection to it
+anymore. A solution are PCI serial devices.

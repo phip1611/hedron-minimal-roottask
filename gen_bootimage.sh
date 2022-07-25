@@ -25,6 +25,7 @@ function fn_prepare_iso_dir() {
     mkdir -p "${ISO_SRC_DIR}/boot/grub"
 
     cp "${GRUB_DIR}/grub.cfg" "${ISO_SRC_DIR}/boot/grub/grub.cfg"
+    cp "${BENDER}" "${ISO_SRC_DIR}/bender"
     cp "${HEDRON}" "${ISO_SRC_DIR}/hedron"
     cp "${ROOTTASK}" "${ISO_SRC_DIR}/roottask"
 }
