@@ -12,21 +12,22 @@ cd "$DIR" || exit 1
 source .config.sh
 
 function fn_main() {
+    fn_build_bender
     fn_build_hedron
     fn_build_rust
     fn_build_rust_strip
 }
 
+function fn_build_bender() {
+    cd bender || exit 1
+    nix-build
+    cd ..
+}
+
 function fn_build_hedron() {
     cd hedron || exit 1
-    # Use toolchain provided by Nix
-    # I don't use "nix-build nix/release.nix -A hedron" here because this
-    # way is faster because Nix needs to download less stuff.
-    nix-shell --run "
-    mkdir -p build
-    cd build || exit 1
-    cmake -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
-    make -j 8"
+    # build without tests etc
+    nix-build nix/release.nix -A hedron.default-release
     cd ..
 }
 

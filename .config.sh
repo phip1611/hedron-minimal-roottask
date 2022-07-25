@@ -1,5 +1,8 @@
 # Path to the Hedron artifact (after build)
-export HEDRON="hedron/build/src/hypervisor.elf32"
+export HEDRON="hedron/result/share/hedron/hypervisor"
+
+# Path to the Bender artifact (after build)
+export BENDER="bender/result/share/bender/bender"
 
 # "debug" or "release"
 export RELEASE=release

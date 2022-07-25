@@ -1,3 +1,6 @@
 [submodule "hedron"]
 	path = hedron
 	url = https://github.com/cyberus-technology/hedron.git
+[submodule "bender"]
+	path = bender
+	url = https://github.com/blitz/bender.git
