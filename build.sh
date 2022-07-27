@@ -44,8 +44,8 @@ function fn_build_rust() {
 # modules is accelerated by an order of magnitude.
 function fn_build_rust_strip() {
     cd roottask || exit 1
-    cp "target/${COMPILER_TARGET}/debug/hmr" "target/${COMPILER_TARGET}/debug/hmr_stripped"
-    strip "target/${COMPILER_TARGET}/debug/hmr_stripped"
+    # cp "target/${COMPILER_TARGET}/debug/hmr" "target/${COMPILER_TARGET}/debug/hmr_stripped"
+    # strip "target/${COMPILER_TARGET}/debug/hmr_stripped"
     cp "target/${COMPILER_TARGET}/release/hmr" "target/${COMPILER_TARGET}/release/hmr_stripped"
     strip "target/${COMPILER_TARGET}/release/hmr_stripped"
     cd ..
