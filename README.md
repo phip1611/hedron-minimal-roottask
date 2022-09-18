@@ -17,9 +17,9 @@ I developed this project on a Linux system. It might also build on other UNIX-sy
 This only builds in Linux environments. Maybe also in UNIX environments
 such as macOS, but I didn't test it.
 
-- [Rust and Cargo](https://www.rust-lang.org/tools/install)
-- [Nix](https://nixos.org/download.html#nix-install-linux)
-- [QEMU](https://www.qemu.org/)
+- [Rust and Cargo](https://www.rust-lang.org/tools/install) (to build the roottask)
+- [Nix](https://nixos.org/download.html#nix-install-linux) (for Hedron)
+- [QEMU](https://www.qemu.org/) (to run Hedron + roottask)
 
 QEMU is installed best via your package manager. I recommend installing Rust via rustup,
 as rustup will automatically chose the correct Rust version for the roottask.
