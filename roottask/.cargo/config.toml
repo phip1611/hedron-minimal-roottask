@@ -11,5 +11,10 @@ rustflags = [
     # See: https://github.com/rust-lang/rust/blob/1.62.1/compiler/rustc_target/src/spec/x86_64_unknown_none.rs
     # This is not supported by Hedron.
     "-C",
-    "relocation-model=static"
+    "relocation-model=static",
+
+    # they are all disabled by the "x86_64-unknown-none" target but as we are in user space and
+    # can use the FPU, we use all these nice features.
+    "-C",
+    "target-feature=+mmx,+avx,+avx2,+sse,+sse2,+sse3,+ssse3,+sse4.1,+sse4.2,+fma"
 ]
