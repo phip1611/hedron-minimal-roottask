@@ -45,6 +45,9 @@ SECTIONS {
     /* Always align link address and offset within the ELF-file to a 4k (=page) boundary. */
     .text ALIGN(4K) : ALIGN(4K)
     {
+        /* Assembly Code */
+        *(.text.init)
+        /* Rust Code */
         *(.text .text.*)
     } : rx
 

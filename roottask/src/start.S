@@ -37,7 +37,7 @@ SOFTWARE.
 
 # -----------------------------------------------------------------
 
-.section .text
+.section .text.init
 
 # Entry referenced in final ELF.
 start:
@@ -54,16 +54,7 @@ start:
       lea     rsi,    [rsp - 0x1000]
 
       # SET UP STACK
-      # align stack to 64 byte / 512 bits
-      # --> otherwise vector instructions or usage of
-      #     vector registers  may throw a General Protection Fault
-      movabs  rax,      OFFSET _initial_stack_top
-      sub     rax,      64
-      # increase by 8 again: weird x86_64 stack thingy: rsp - 8 must be 64-byte aligned
-      # I don't know the name of this reason or technique.. it's just like that for now.
-      add     rax,      8
-      mov     rsp,      rax
-      mov     rbp,      rax
+      movabs  rsp,      OFFSET _initial_stack_top
 
       jmp     rust_entry
       ud2
