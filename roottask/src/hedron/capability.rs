@@ -39,7 +39,6 @@ SOFTWARE.
 
 use core::fmt::{Debug, Formatter};
 use core::marker::PhantomData;
-use enum_iterator::IntoEnumIterator;
 
 /// Generic capability selector. It indexes into the capability space
 /// of the protection domain, similar to a file descriptor in UNIX.
@@ -72,7 +71,7 @@ pub const MAX_CRD_BASE: u64 = 0x000f_ffff_ffff_ffff;
 
 /// Defines the kind of capabilities inside the capability
 /// space of a PD inside the kernel. First two bits of [`Crd`].
-#[derive(Debug, Copy, Clone, IntoEnumIterator, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(u8)]
 pub enum CrdKind {
     /// Null capability. Default value of each index in the capability space
@@ -99,13 +98,9 @@ impl From<u8> for CrdKind {
     /// Creates a CrdKind from an unsigned integer value.
     /// Panics if value is invalid.
     fn from(val: u8) -> Self {
-        // generated during compile time; probably not recognized by IDE
-        for variant in Self::into_enum_iter() {
-            if variant.val() == val {
-                return variant;
-            }
-        }
-        panic!("invalid variant! id={}", val);
+        let max = CrdKind::Object as u8;
+        assert!(val <= max);
+        unsafe { core::mem::transmute(val) }
     }
 }
 
@@ -627,16 +622,9 @@ bitflags::bitflags! {
 bitflags::bitflags! {
     /// Permissions of a capability for a `PD` object.
     pub struct PDCapPermissions: u8 {
-        /// The target PD can execute the `create_pd`-syscall.
-        const CREATE_PD = bit!(0);
-        /// The target PD can execute the `create_ec`-syscall.
-        const CREATE_EC = bit!(1);
-        /// The target PD can execute the `create_sc`-syscall.
-        const CREATE_SC = bit!(2);
-        /// The target PD can execute the `create_pt`-syscall.
-        const CREATE_PT = bit!(3);
-        /// The target PD can execute the `create_sm`-syscall.
-        const CREATE_SM = bit!(4);
+        /// The target PD can execute the syscalls to create
+        /// further PD, SM , EC, SM, or PT objects.
+        const CREATE_KOBJECTS = bit!(0);
     }
 }
 

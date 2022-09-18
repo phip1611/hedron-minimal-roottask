@@ -23,8 +23,6 @@ SOFTWARE.
 */
 //! Generic typings for Hedron syscalls.
 
-use enum_iterator::IntoEnumIterator;
-
 /// Does a NOVA/Hedron syscall with 5 arguments.
 /// On success, the "out2"-value is returned.
 /// On failure, the error code ("out1") is returned
@@ -108,7 +106,7 @@ impl PdCtrlSubSyscall {
 
 /// Possible return values from the syscall.
 /// All except the 0 value are error codes.
-#[derive(Debug, Copy, Clone, PartialEq, Eq, IntoEnumIterator)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[repr(u64)]
 pub enum SyscallStatus {
     /// The operation completed successfully
@@ -136,14 +134,13 @@ impl From<u64> for SyscallStatus {
     fn from(val: u64) -> Self {
         let val = val & Self::SYSCALL_STATUS_BITMASK;
 
-        // generated during compile time; probably not recognized by IDE
-        for variant in Self::into_enum_iter() {
-            if variant.val() == val {
-                return variant;
-            }
-        }
+        let max_val = SyscallStatus::BadDev as u64;
+        assert!(val <= max_val);
 
-        panic!("invalid variant! id={}", val);
+        unsafe {
+            // this is safe as the type has `#[repr(u64)]`
+            core::mem::transmute(val)
+        }
     }
 }
 
