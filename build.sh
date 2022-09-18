@@ -33,7 +33,7 @@ function fn_build_hedron() {
 function fn_build_rust() {
     cd roottask || exit 1
     cargo check
-    cargo fmt -- --check
+    cargo fmt
     cargo clippy
     cargo build --release
     cd ..
