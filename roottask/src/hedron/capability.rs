@@ -627,16 +627,9 @@ bitflags::bitflags! {
 bitflags::bitflags! {
     /// Permissions of a capability for a `PD` object.
     pub struct PDCapPermissions: u8 {
-        /// The target PD can execute the `create_pd`-syscall.
-        const CREATE_PD = bit!(0);
-        /// The target PD can execute the `create_ec`-syscall.
-        const CREATE_EC = bit!(1);
-        /// The target PD can execute the `create_sc`-syscall.
-        const CREATE_SC = bit!(2);
-        /// The target PD can execute the `create_pt`-syscall.
-        const CREATE_PT = bit!(3);
-        /// The target PD can execute the `create_sm`-syscall.
-        const CREATE_SM = bit!(4);
+        /// The target PD can execute the syscalls to create
+        /// further PD, SM , EC, SM, or PT objects.
+        const CREATE_KOBJECTS = bit!(0);
     }
 }
 
