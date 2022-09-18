@@ -39,21 +39,21 @@ SECTIONS {
 
     /* Link Address: 4 MiB */
     . = 0x400000;
-    /* Not 100% sure but the presence of this macro forces the Linker to do some
-       (apparently) important internal calculations. */
-    . += SIZEOF_HEADERS;
 
-    .text : ALIGN (4096)
+
+    /* Syntax is described here: https://sourceware.org/binutils/docs/ld/Output-Section-Attributes.html */
+    /* Always align link address and offset within the ELF-file to a 4k (=page) boundary. */
+    .text ALIGN(4K) : ALIGN(4K)
     {
         *(.text .text.*)
     } : rx
 
-    .rodata : ALIGN (4096)
+    .rodata ALIGN(4K) : ALIGN(4K)
     {
         *(.rodata .rodata.*)
     } : ro
 
-    .data : ALIGN (4096)
+    .data ALIGN(4K) : ALIGN(4K)
     {
         *(.data .data.*)
         *(COMMON)
@@ -66,7 +66,7 @@ SECTIONS {
     } : rw
 
     /* Information for unwinding & backtraces */
-    .eh_frame : ALIGN (4096)
+    /DISCARD/ :
     {
         *(.eh_frame*)
     } : ro
