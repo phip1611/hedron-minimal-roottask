@@ -41,21 +41,18 @@ SOFTWARE.
 
 # Entry referenced in final ELF.
 start:
-      # INTEL SYNTAX on x86_64! Destination is left
+      # GAS-like assembly syntax with intel noprefix mode
+      # -> destination register is left
 
-      # This code is partially Microkernel dependent. From the NOVA spec/Hedron documentation
-      # I know that the initial register state contains the HIP pointer in `rsp` and the
-      # UTCB pointer in `rsp - 0x1000`.
-
-      # move HIP pointer to first function argument
-      mov     rdi,    rsp
-
-      # UTCB is 1 page below HIP
-      lea     rsi,    [rsp - 0x1000]
+      # prepare argument 1
+      movabs    rdi,    7
+      # prepare argument 2
+      movabs    rsi,    3
 
       # SET UP STACK
       movabs  rsp,      OFFSET _initial_stack_top
 
+      # jump into high level code
       jmp     rust_entry
       ud2
 

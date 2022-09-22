@@ -42,21 +42,14 @@ use core::sync::atomic::{compiler_fence, Ordering};
 
 /// Minimal roottask that performs some calculations and prints to serial and QEMUs debugcon port.
 #[no_mangle]
-fn rust_entry(hip_ptr: *const u8, utcb_ptr: *const u8) -> ! {
+fn rust_entry(a: u64, b: u64) -> ! {
     logger::init(log::LevelFilter::max());
-    // demonstration that vector instructions and vector registers work
-    // => no #GPF or so due to stack misalignment
-    let a = [1.1, 2.2, 3.3, 4.4];
-    let b = [-1.55, 22.2, 63.3, -64.4];
-    let mut c = [0.0; 4];
-    for i in 0..4 {
-        c[i] = a[i] * b[i];
-    }
-    // -------------------------------------
-    log::info!("Hello World from Roottask: hip_ptr={hip_ptr:?}, utcb_ptr:{utcb_ptr:?}");
-    log::info!("a[{a:?}] * b[{b:?}] = c[{c:?}]");
+    log::info!("Hello World from Roottask!");
+    log::info!("a={}, b={}", a, b);
+    let c = a * b;
+    log::info!("a*b={}", c);
 
-    panic!("game over")
+    panic!("finished")
 }
 
 // required by the Rust compiler.
